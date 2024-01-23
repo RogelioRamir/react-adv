@@ -3,7 +3,8 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  NavLink
+  NavLink,
+  Redirect
 } from 'react-router-dom';
 import { routes } from './routes'
 
@@ -23,9 +24,9 @@ export const Navigation = () => {
             <img src={logo} alt="React Logo" />
             <ul>
               {
-                routes && routes.map(({ to, name }) => (
-                  <li key={to}>
-                    <NavLink to={to} activeClassName='nav-active'>{name}</NavLink>
+                routes && routes.map(({ path, name }) => (
+                  <li key={path}>
+                    <NavLink to={path} activeClassName='nav-active' exact>{name}</NavLink>
                   </li>
                 ))
               }
@@ -38,10 +39,16 @@ export const Navigation = () => {
 
             {
               routes && routes.map(({ path, Component }) => (
-                <Route key={path} path={path}>{<Component />}</Route>
+                <Route
+                  key={path}
+                  path={path}
+                  render={ () => <Component /> }
+                />
               ))
             }
-            <Route path='/*'><LazyPage1 /></Route>
+
+            <Redirect to={routes[0].path} />
+
           </Switch>
         </div>
       </Router>
